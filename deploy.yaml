@@ -13,9 +13,12 @@ spec:
     spec:
       containers:
       - name: tekton-pod
-        image: <YOUR_USERNAME>/tekton-lab-app
+        image: deegbo/tekton-lab-ap:v1
         ports:
         - containerPort: 3000
+      imagePullSecrets:
+      - name: dockerhub-private
+
 ---
 apiVersion: v1
 kind: Service
@@ -24,23 +27,7 @@ metadata:
 spec:
   selector:
     app: trigger-demo
+  type: LoadBalancer
   ports:
   - port: 3000
     protocol: TCP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: tekton-ingress
-spec:
-  rules:
-  - http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: tekton-svc
-            port: 
-              number: 3000
-
